@@ -480,6 +480,9 @@
     gap: 1.2rem;
   }
   .cert-card {
+    text-decoration: none;
+    display: block;
+    color: inherit;
     padding: 1.5rem;
     background: rgba(26,0,37,0.7);
     border: 1px solid var(--border-glow);
