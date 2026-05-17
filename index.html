@@ -10,6 +10,7 @@
 <meta property="og:title" content="Yelimar Zambrano · Pentester">
 <meta property="og:description" content="Portfolio de seguridad ofensiva y writeups técnicos">
 <meta property="og:type" content="website">
+<meta property="og:image" content="og-image.png">
 <meta property="og:url" content="https://zbel-oss.github.io/">
 
 <title>Yelimar Zambrano ·Junior Cybersecurity Analyst</title>
@@ -58,7 +59,7 @@
     </h1>
     <p class="hero-title">// eJPTv2 Certified | Ethical Hacking &amp; Pentesting</p>
     <p class="hero-desc">
-      Auditorias web, analisis de vulnerabilidades y seguridad ofensiva.
+      Auditorías web, análisis de vulnerabilidades y seguridad ofensiva.
     </p>
     <div class="hero-ctas">
       <a href="#writeups" class="btn-primary">Ver Writeups</a>
@@ -69,7 +70,7 @@
   <div class="hero-stats">
     <div class="stat-item">
       <div class="stat-num">12+</div>
-      <div class="stat-label">Maquinas HTB</div>
+      <div class="stat-label">Máquinas HTB</div>
     </div>
     <div class="stat-item">
       <div class="stat-num">...</div>
@@ -101,7 +102,7 @@
       <div class="terminal-deco">
         <div><span class="prompt">YZ@kali</span>:<span style="color:var(--purple-bright)">~</span>$ <span class="cmd">cat about.txt</span></div>
         <div class="out">Pentester en formacion activa.</div>
-        <div class="out">Especialidad: seguridad ofensiva y analisis de vulnerabilidades.</div>------
+        <div class="out">Especialidad: seguridad ofensiva y análisis de vulnerabilidades.</div>------
         <div><span class="prompt">YZ@kali</span>:<span style="color:var(--purple-bright)">~</span>$ <span class="cursor-blink"></span></div>
       </div>
 
@@ -149,7 +150,7 @@ con objetivo profesional orientado a Red Team y Pentesting.
 <section id="writeups">
   <div class="reveal">
     <p class="section-tag">02 // writeups</p>
-    <h2 class="section-title">Maquinas &amp; Writeups</h2>
+    <h2 class="section-title">Máquinas &amp; Writeups</h2>
   </div>
 
   <div class="writeups-grid">
@@ -175,22 +176,29 @@ con objetivo profesional orientado a Red Team y Pentesting.
          class="card-link">Ver informe completo</a>
     </div>
 
-    <!-- PLACEHOLDER CARDS -->
-    <div class="writeup-card reveal" style="opacity:0.4;pointer-events:none;">
+    <div class="writeup-card reveal">
       <div class="card-top">
         <span class="card-platform">HackTheBox</span>
         <span class="card-diff diff-easy">Easy</span>
       </div>
-      <h3 class="card-title">Proxima maquina</h3>
-      <p class="card-os">// En progreso...</p>
+      <h3 class="card-title">Jerry</h3>
+      <p class="card-os">// Windows . Apache Tomcat 7.0.88</p>
       <div class="card-tags">
-        <span class="tag">Por descubrir</span>
+        <span class="tag">Credenciales por defecto</span>
+        <span class="tag">WAR Deploy</span>
+        <span class="tag">RCE</span>
+        <span class="tag">Windows SYSTEM</span>
       </div>
       <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1rem;line-height:1.7;">
-        El siguiente writeup estara disponible pronto.
+       Credenciales por defecto en Tomcat Manager → deploy de WAR malicioso → shell como SYSTEM.
+        <a href="Writeups/informe_pentesting_jerry.pdf"    
+         target="_blank"
+         class="card-link">Ver informe completo</a>
       </p>
     </div>
 
+    <!-- PLACEHOLDER CARDS -->
+    
     <div class="writeup-card reveal" style="opacity:0.4;pointer-events:none;">
       <div class="card-top">
         <span class="card-platform">HackTheBox</span>
