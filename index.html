@@ -69,7 +69,7 @@
 
   <div class="hero-stats">
     <div class="stat-item">
-      <div class="stat-num">12+</div>
+      <div class="stat-num">20+</div>
       <div class="stat-label">Máquinas HTB</div>
     </div>
     <div class="stat-item">
@@ -252,12 +252,14 @@ SMB null → AS-REP Roasting → ForceChangePassword → lsass dump → privesc 
 <span class="card-diff diff-medium">Medium</span>
 </div>
 <h3 class="card-title">Monteverde</h3>
-<p class="card-os">// Windows · </p>
+<p class="card-os">// Windows · Azure AD Connect </p>
 <div class="card-tags">
-<span class="tag">Coming soon</span>
+<span class="tag">RPC Null Sessions</span>
+<span class="tag">SMB Enumeration</span>
+<span class="tag">Azure AD Connect</span>
 </div>
 <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1rem;line-height:1.7;">
-Writeup en preparacion.
+RPC null → enum usuarios → credencial user=pass → azure.xml vía SMB → decrypt Azure AD Sync
 </p>
   <a href="Writeups/informe_pentesting_monteverde.pdf"    
          target="_blank"
@@ -284,19 +286,26 @@ Writeup en preparacion.
 
     <!-- PLACEHOLDER CARDS -->
 
-<div class="writeup-card reveal" style="opacity:0.4;pointer-events:none;">
+<div class="writeup-card reveal">
 <div class="card-top">
 <span class="card-platform">HackTheBox</span>
 <span class="card-diff diff-medium">Medium</span>
 </div>
 <h3 class="card-title">Jeeves</h3>
-<p class="card-os">// Windows · </p>
+<p class="card-os">// Windows · Jenkins </p>
 <div class="card-tags">
-<span class="tag">Coming soon</span>
+<span class="tag">Jenkins Script Console</span>
+<span class="tag">Groovy RCE</span>
+<span class="tag">KeePass</span>
+<span class="tag">Pass-the-Hash</span>
 </div>
 <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1rem;line-height:1.7;">
-Writeup en preparacion.
+Gobuster → Jenkins sin auth → Groovy RCE → CEH.kdbx → keepass2john → hashcat → Hash NTLM → PTH → NT AUTHORITY\SYSTEM
 </p>
+ <a href="Writeups/informe_pentesting_jeeves.pdf"    
+         target="_blank"
+         class="card-link">Ver informe completo
+  </a>
 </div>
 
     <!-- PLACEHOLDER CARDS -->
@@ -658,6 +667,8 @@ Writeup en preparacion.
     <p class="section-tag">05 // Labs &amp; Platforms</p>
     <h2 class="section-title">Labs &amp; Platforms</h2>
   </div>
+
+
   <div class="certs-grid reveal">
     <a href="https://profile.hackthebox.com/profile/019ddeb9-3e2b-736d-b70e-602713d842b1"
        target="_blank"
@@ -667,6 +678,23 @@ Writeup en preparacion.
       <div class="cert-entity">HackTheBox · Active Player</div>
     </a>
 
+ <!-- PLACEHOLDER CARDS -->
+
+ <div class="certs-grid reveal">
+  <a href="Documented_Laboratories/informe_pentesting_eJPT.pdf"
+       target="_blank"
+       class="cert-card">
+      <div class="cert-status status-done">✔ COMPLETADO</div>
+      <div class="cert-name"> Prueba de Penetración — Laboratorio eJPT</div>
+      <div class="card-tags">
+      <span class="tag">Laboratorio documentado</span>
+      </div>
+    <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:1rem;line-height:1.7;">
+      INE Security · Laboratorio de pentesting documentado paso a paso, con metodología y hallazgos.
+    </p>
+  </a>
+ </div>
+  
 </section>
 
 <div class="divider"></div>
