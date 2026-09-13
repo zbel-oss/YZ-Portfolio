@@ -397,6 +397,7 @@
   .card-diff {
     font-family: 'Space Mono', monospace;
     font-size: 0.65rem;
+  
     padding: 2px 10px;
     border-radius: 2px;
   }
