@@ -571,6 +571,7 @@
       machineTitle: "Makesense",
       machineSubheader: "Linux • WordPress 7.0 • Apache 2.4.58",
       machineDifficulty: "MEDIUM",
+      isActive: true,  // ← AGREGAR ESTO (true = máquina activa, false = retirada)
 
       resumenText: "MakeSense es una máquina Linux que utiliza WordPress 7.0 como servicio web. A partir de la enumeración de servicios y directorios, junto con el análisis de algunas funcionalidades de la aplicación web, se consigue obtener acceso remoto al sistema y posteriormente escalar privilegios hasta root. La cadena de explotación incluye una vulnerabilidad XSS, RCE mediante la subida de un plugin malicioso, conexión mediante SSH y SSH Port Forwarding para acceder a servicios internos. Posteriormente, mediante la reutilización de credenciales y el análisis del servicio OCR disponible a través de la funcionalidad Draw en localhost, se consigue explotar el servicio que se ejecuta como root y obtener una RCE con privilegios elevados.",
       steps: [
