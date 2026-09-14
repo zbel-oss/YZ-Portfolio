@@ -452,6 +452,8 @@
       color: #00c850;
     }
 
+    
+
     .step-text ul {
       margin: 0.8rem 0;
       padding-left: 1.5rem;
@@ -499,6 +501,7 @@
       .step-arrow {
         margin-top: 0.5rem;
       }
+
     }
   </style>
 </head>
@@ -566,8 +569,10 @@
 
     const CONFIG = {
       machineTitle: "Makesense",
-      machineSubheader: "Linux • WordPress 7.0",
+      machineSubheader: "Linux • WordPress 7.0 • Apache 2.4.58",
       machineDifficulty: "MEDIUM",
+      isActive: true,  // ← AGREGAR ESTO (true = máquina activa, false = retirada)
+
       resumenText: "MakeSense es una máquina Linux que utiliza WordPress 7.0 como servicio web. A partir de la enumeración de servicios y directorios, junto con el análisis de algunas funcionalidades de la aplicación web, se consigue obtener acceso remoto al sistema y posteriormente escalar privilegios hasta root. La cadena de explotación incluye una vulnerabilidad XSS, RCE mediante la subida de un plugin malicioso, conexión mediante SSH y SSH Port Forwarding para acceder a servicios internos. Posteriormente, mediante la reutilización de credenciales y el análisis del servicio OCR disponible a través de la funcionalidad Draw en localhost, se consigue explotar el servicio que se ejecuta como root y obtener una RCE con privilegios elevados.",
       steps: [
         {
@@ -576,12 +581,19 @@
           description: "Escaneo inicial de puertos y servicios",
           type: "reconocimiento",
           icon: "🔍",
-          code: `$ nmap -p- --min-rate 5000 -sV jerry
-<span class="comment">Starting Nmap 7.92...</span>
-PORT STATE SERVICE VERSION
-80/tcp open http
-8080/tcp open http-proxy Tomcat 7.0.88`,
-          explanation: `<strong>Hallazgos:</strong> Dos puertos HTTP activos identificados. El puerto 8080 expone un servidor Tomcat. Se determina la versión y servicios disponibles.`
+          code: `└─$ sudo nmap -sS -sCV 10.129.246.24 --min-rate 1500 -vvv -oN ports.txt`,
+          explanation: `
+          <a 
+          href="../images/evidencias/evidencias-makesense/evidencia-makesense.png" target="_blank" style="display:inline-block;cursor:pointer;">
+          <img src="../images/evidencias/evidencias-makesense/evidencia-makesense.png" style="max-width:100%;margin:1rem 0;cursor:pointer;transition:transform 0.3s;hover:transform scale(1.02);">
+          </a>
+          <a 
+          href="../images/evidencias/evidencias-makesense/evidencia2-makesense.png" target="_blank" style="display:inline-block;cursor:pointer;">
+          <img src="../images/evidencias/evidencias-makesense/evidencia2-makesense.png" style="max-width:100%;margin:1rem 0;cursor:pointer;transition:transform 0.3s;hover:transform scale(1.02);">
+          </a>
+          <br>
+          <strong>Hallazgos:</strong> Se identifican dos puertos principales activos: puerto 22/TCP SSH server, 443/TCP con Apache HTTP Server y puerto 8001/TCP con vcom-tunnel (servicio corriendo internamente). El servicio Apache aloja WordPress 7.0.
+          `
         },
         {
           number: "02",
@@ -652,17 +664,26 @@ $ curl http://jerry:8080/shell/
         card.classList.add(step.type);
       }
 
+       // Agregar clase si es máquina activa
+      if (CONFIG.isActive) {
+        card.classList.add('machine-active');
+      }
+         
+       const warningMsg = CONFIG.isActive ? '<div style="color:#ff5e00;font-size:0.75rem;margin-top:0.5rem;font-family:\'Space Mono\',monospace;">⚠️ Máquina activa - Detalles no disponibles</div>' : '';
+
       card.innerHTML = `
-        <div class="step-header">
+        <div class="step-header"> 
           <div class="step-icon">${step.icon}</div>
           <div class="step-info">
             <div class="step-texts">
               <div class="step-title">${step.number}. ${step.title}</div>
               <div class="step-description">${step.description}</div>
+              ${CONFIG.isActive ? '<div style="color:#ff5e00;font-size:0.75rem;margin-top:0.5rem;font-family:\'Space Mono\',monospace;">⚠️ Máquina activa - Detalles no disponibles</div>' : ''}
             </div>
             <div class="step-arrow">▶</div>
           </div>
         </div>
+
         <div class="step-content">
           <div class="content-box">
             ${step.code ? `<div class="code-block">${step.code}</div>` : ''}
@@ -670,12 +691,14 @@ $ curl http://jerry:8080/shell/
           </div>
         </div>
       `;
-
-      card.addEventListener('click', () => {
+    
+       // Solo agregar evento click si NO es máquina activa
+       if (!CONFIG.isActive) {
+        card.addEventListener('click', () => {
         card.classList.toggle('expanded');
         saveStates();
       });
-
+    }
       return card;
     }
 
@@ -707,6 +730,17 @@ $ curl http://jerry:8080/shell/
   </script>
 
 <div class="divider"></div>
+
+<!-- DISCLAIMER EDUCATIVO -->
+<div style="max-width:800px;margin:4rem auto;padding:2rem;border:1px solid rgba(180,74,255,0.3);border-radius:8px;background:rgba(26,0,37,0.5);text-align:center;">
+  <p style="color:#b44aff;font-family:'Space Mono',monospace;font-size:0.9rem;margin:0;">
+    <strong>📚 Información Educativa</strong>
+  </p>
+  <p style="color:#9b7fc0;font-family:'Outfit',sans-serif;font-size:0.95rem;line-height:1.6;margin:1rem 0 0 0;">
+    Este portafolio contiene writeups de máquinas HackTheBox publicados exclusivamente con fines educativos. 
+    El contenido se publica únicamente después de que las máquinas son retiradas de la plataforma activa, 
+    respetando las políticas de la misma.
+</div>
 
 <!-- CONTACTO -->
 <section id="contact">
